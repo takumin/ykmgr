@@ -1,4 +1,4 @@
-OS := $(strip $(shell uname | tr A-Z a-z | sed -e 's/mingw64_nt/windows/'))
+OS := $(strip $(shell uname | tr A-Z a-z | sed -e 's/mingw64.*/windows/'))
 ARCH := $(strip $(shell uname -m | tr A-Z a-z))
 
 APPNAME := $(shell basename $(CURDIR))
