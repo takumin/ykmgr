@@ -1,5 +1,5 @@
-OS ?= $(subst Windows_NT,windows,$(shell uname | tr A-Z a-z))
-ARCH := $(shell uname -m | tr A-Z a-z)
+OS := $(strip $(shell uname | tr A-Z a-z | sed -e 's/_nt$//'))
+ARCH := $(strip $(shell uname -m | tr A-Z a-z))
 
 APPNAME := $(shell basename $(CURDIR))
 
