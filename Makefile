@@ -1,4 +1,4 @@
-OS ?= $(shell uname | tr A-Z a-z)
+OS ?= $(subst Windows_NT,windows,$(shell uname | tr A-Z a-z))
 ARCH := $(shell uname -m | tr A-Z a-z)
 
 APPNAME := $(shell basename $(CURDIR))
