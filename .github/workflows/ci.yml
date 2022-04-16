@@ -1,0 +1,139 @@
+name: CI
+on:
+  push:
+    paths:
+    # Build
+    - 'Makefile'
+    # Go
+    - '**.go'
+    - 'go.mod'
+    - 'go.sum'
+    # Protocol Buffers
+    - '**.proto'
+    - 'buf.yaml'
+    - 'buf.lock'
+    - 'buf.gen.yaml'
+    - 'buf.work.yaml'
+    # GitHub Actions
+    - '.github/workflows/ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  repository-projects: write
+jobs:
+  build:
+    strategy:
+      matrix:
+        os:
+        - ubuntu
+        - windows
+        - macos
+        go:
+        - '1.17'
+        - '1.18'
+    env:
+      CC: 'gcc'
+      CXX: 'g++'
+      CGO_ENABLED: '1'
+      RELEASE_GO_VERSION: '1.18'
+    runs-on: ${{ matrix.os }}-latest
+    name: Go ${{ matrix.go }} (${{ matrix.os }})
+    defaults:
+      run:
+        shell: bash
+    steps:
+    ################################################################################
+    # Packages
+    ################################################################################
+    - name: Packages
+      run: |
+        sudo apt-get install -y libpcsclite-dev
+      if: ${{ matrix.os == 'ubuntu' }}
+    ################################################################################
+    # Checkout
+    ################################################################################
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: ${{ startsWith(github.ref, 'refs/tags/') && '0' || '1' }}
+    ################################################################################
+    # Setup
+    ################################################################################
+    - name: Setup Protoc
+      uses: arduino/setup-protoc@v1
+      with:
+        repo-token: ${{ github.token }}
+    - name: Setup Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: ${{ matrix.go }}
+    ################################################################################
+    # Cache
+    ################################################################################
+    - name: Cache Directory
+      id: cache-dir
+      run: |
+        GOCACHE="$(go env GOCACHE)"
+        GOMODCACHE="$(go env GOMODCACHE)"
+        test -z "${GOCACHE}" && GOCACHE="${HOME}/.cache/go-build"
+        test -z "${GOMODCACHE}" && GOMODCACHE="$(go env GOPATH)/pkg/mod"
+        test -z "${BUF_CACHE_DIR}" && BUF_CACHE_DIR="${HOME}/.cache/buf"
+        echo "::set-output name=go-build::${GOCACHE}"
+        echo "::set-output name=go-mod::${GOMODCACHE}"
+        echo "::set-output name=buf-mod::${BUF_CACHE_DIR}"
+    - name: Go Build Cache
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.cache-dir.outputs.go-build }}
+        key: ${{ runner.os }}-go-${{ matrix.go }}-build-${{ hashFiles('**/go.sum') }}-${{ hashFiles('.github/actions-cache-version') }}
+    - name: Go Mod Cache
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.cache-dir.outputs.go-mod }}
+        key: ${{ runner.os }}-go-${{ matrix.go }}-mod-${{ hashFiles('**/go.sum') }}-${{ hashFiles('.github/actions-cache-version') }}
+    - name: Buf Mod Cache
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.cache-dir.outputs.buf-mod }}
+        key: ${{ runner.os }}-buf-${{ matrix.go }}-mod-${{ hashFiles('**/buf.lock') }}-${{ hashFiles('.github/actions-cache-version') }}
+    ################################################################################
+    # Go
+    ################################################################################
+    - name: Go Mod Download
+      run: go mod download
+    - name: Go Mod Tidy
+      run: go mod tidy
+    - name: Go Tools
+      run: make tools
+    - name: Go Vet
+      run: make vet
+    - name: Go Lint
+      run: make lint
+    - name: Go Test
+      run: make test
+    - name: Go Build
+      run: make build
+    - name: Go Archive
+      run: make archive
+    ################################################################################
+    # Artifact
+    ################################################################################
+    - name: Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ runner.os }}
+        path: |
+          dist/*.zip
+          dist/*.zip.sha256sum
+    ################################################################################
+    # Release
+    ################################################################################
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.go == env.RELEASE_GO_VERSION }}
+      with:
+        files: |
+          dist/*.zip
+          dist/*.zip.sha256sum

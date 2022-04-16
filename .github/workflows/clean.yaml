@@ -1,0 +1,24 @@
+name: Clean
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: GitHub Actions Cache
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
+    - name: GitHub Actions Cache Version
+      run: |
+        date +%s > .github/actions-cache-version
+    - name: Commit & Push
+      uses: actions-js/push@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        author_email: 'github-actions@users.noreply.github.com'
+        author_name: 'github-actions'
+        message: 'ci: clear github actions cache'

@@ -1,0 +1,99 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "yubikey/v1/yubikey.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "YubikeyService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/yubikey/firmware-version": {
+      "get": {
+        "operationId": "YubikeyService_GetFirmwareVersion",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetFirmwareVersionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "YubikeyService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1FirmwareVersion": {
+      "type": "object",
+      "properties": {
+        "major": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "minor": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "patch": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "v1GetFirmwareVersionResponse": {
+      "type": "object",
+      "properties": {
+        "firmwareVersions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1FirmwareVersion"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package yubikey.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/takumin/ykmgr/internal/protobuf/yubikey";
+
+message FirmwareVersion {
+  uint32 major = 1;
+  uint32 minor = 2;
+  uint32 patch = 3;
+}
+
+message GetFirmwareVersionRequest {
+}
+
+message GetFirmwareVersionResponse {
+  repeated FirmwareVersion firmware_versions = 1;
+}
+
+service YubikeyService {
+  rpc GetFirmwareVersion(GetFirmwareVersionRequest) returns (GetFirmwareVersionResponse) {
+    option (google.api.http) = {
+      get: "/v1/yubikey/firmware-version"
+    };
+  }
+}
