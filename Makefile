@@ -25,6 +25,12 @@ LDFLAGS          := -ldflags '-s -w $(LDFLAGS_APPNAME) $(LDFLAGS_VERSION) $(LDFL
 
 SRCS := $(shell find . -type f -name '*.go' -or -name '*.proto')
 
+ifeq ($(OS),darwin)
+SHA256SUM := shasum -a 256
+else
+SHA256SUM := sha256sum
+endif
+
 .PHONY: all
 all: lint vet build
 
@@ -80,10 +86,10 @@ archive: build
 	cp bin/$(APPNAME) dist/archive
 ifeq ($(RELEASE),true)
 	cd dist/archive && 7z a ../$(APPNAME)-$(VERSION)-$(OS)-$(ARCH).zip *
-	cd dist && sha256sum *.zip | tee $(APPNAME)-$(VERSION)-$(OS)-$(ARCH).zip.sha256sum
+	cd dist && $(SHA256SUM) *.zip | tee $(APPNAME)-$(VERSION)-$(OS)-$(ARCH).zip.sha256sum
 else
 	cd dist/archive && 7z a ../$(APPNAME)-$(VERSION)-$(REVISION)-$(OS)-$(ARCH).zip *
-	cd dist && sha256sum *.zip | tee $(APPNAME)-$(VERSION)-$(REVISION)-$(OS)-$(ARCH).zip.sha256sum
+	cd dist && $(SHA256SUM) *.zip | tee $(APPNAME)-$(VERSION)-$(REVISION)-$(OS)-$(ARCH).zip.sha256sum
 endif
 
 .PHONY: release
