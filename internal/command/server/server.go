@@ -97,13 +97,13 @@ type server struct {
 	yubikey.UnimplementedYubikeyServiceServer
 }
 
-func (s *server) GetFirmwareVersions(ctx context.Context, req *yubikey.GetFirmwareVersionsRequest) (*yubikey.GetFirmwareVersionsResponse, error) {
+func (s *server) GetVersions(ctx context.Context, req *yubikey.GetVersionsRequest) (*yubikey.GetVersionsResponse, error) {
 	cards, err := piv.Cards()
 	if err != nil {
 		return nil, err
 	}
 
-	versions := make([]*yubikey.FirmwareVersion, len(cards))
+	versions := make([]*yubikey.Version, len(cards))
 	for i, v := range cards {
 		yk, err := piv.Open(v)
 		if err != nil {
@@ -112,14 +112,14 @@ func (s *server) GetFirmwareVersions(ctx context.Context, req *yubikey.GetFirmwa
 		defer yk.Close()
 
 		v := yk.Version()
-		versions[i] = &yubikey.FirmwareVersion{
+		versions[i] = &yubikey.Version{
 			Major: uint32(v.Major),
 			Minor: uint32(v.Minor),
 			Patch: uint32(v.Patch),
 		}
 	}
 
-	return &yubikey.GetFirmwareVersionsResponse{
-		FirmwareVersions: versions,
+	return &yubikey.GetVersionsResponse{
+		Versions: versions,
 	}, nil
 }

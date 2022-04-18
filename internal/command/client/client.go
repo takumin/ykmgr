@@ -49,16 +49,16 @@ func action(c *config.Config) func(ctx *cli.Context) error {
 		}
 
 		client := yubikey.NewYubikeyServiceClient(conn)
-		result, err := client.GetFirmwareVersions(
+		result, err := client.GetVersions(
 			ctx.Context,
-			&yubikey.GetFirmwareVersionsRequest{},
+			&yubikey.GetVersionsRequest{},
 		)
 		if err != nil {
 			return err
 		}
 
-		for _, v := range result.FirmwareVersions {
-			log.Printf("Firmware Version: %d.%d.%d\n", v.Major, v.Minor, v.Patch)
+		for _, v := range result.Versions {
+			log.Printf("Version: %d.%d.%d\n", v.Major, v.Minor, v.Patch)
 		}
 
 		return nil

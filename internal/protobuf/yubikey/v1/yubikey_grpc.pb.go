@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type YubikeyServiceClient interface {
-	GetFirmwareVersions(ctx context.Context, in *GetFirmwareVersionsRequest, opts ...grpc.CallOption) (*GetFirmwareVersionsResponse, error)
+	GetVersions(ctx context.Context, in *GetVersionsRequest, opts ...grpc.CallOption) (*GetVersionsResponse, error)
 }
 
 type yubikeyServiceClient struct {
@@ -33,9 +33,9 @@ func NewYubikeyServiceClient(cc grpc.ClientConnInterface) YubikeyServiceClient {
 	return &yubikeyServiceClient{cc}
 }
 
-func (c *yubikeyServiceClient) GetFirmwareVersions(ctx context.Context, in *GetFirmwareVersionsRequest, opts ...grpc.CallOption) (*GetFirmwareVersionsResponse, error) {
-	out := new(GetFirmwareVersionsResponse)
-	err := c.cc.Invoke(ctx, "/yubikey.v1.YubikeyService/GetFirmwareVersions", in, out, opts...)
+func (c *yubikeyServiceClient) GetVersions(ctx context.Context, in *GetVersionsRequest, opts ...grpc.CallOption) (*GetVersionsResponse, error) {
+	out := new(GetVersionsResponse)
+	err := c.cc.Invoke(ctx, "/yubikey.v1.YubikeyService/GetVersions", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (c *yubikeyServiceClient) GetFirmwareVersions(ctx context.Context, in *GetF
 // All implementations must embed UnimplementedYubikeyServiceServer
 // for forward compatibility
 type YubikeyServiceServer interface {
-	GetFirmwareVersions(context.Context, *GetFirmwareVersionsRequest) (*GetFirmwareVersionsResponse, error)
+	GetVersions(context.Context, *GetVersionsRequest) (*GetVersionsResponse, error)
 	mustEmbedUnimplementedYubikeyServiceServer()
 }
 
@@ -54,8 +54,8 @@ type YubikeyServiceServer interface {
 type UnimplementedYubikeyServiceServer struct {
 }
 
-func (UnimplementedYubikeyServiceServer) GetFirmwareVersions(context.Context, *GetFirmwareVersionsRequest) (*GetFirmwareVersionsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFirmwareVersions not implemented")
+func (UnimplementedYubikeyServiceServer) GetVersions(context.Context, *GetVersionsRequest) (*GetVersionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetVersions not implemented")
 }
 func (UnimplementedYubikeyServiceServer) mustEmbedUnimplementedYubikeyServiceServer() {}
 
@@ -70,20 +70,20 @@ func RegisterYubikeyServiceServer(s grpc.ServiceRegistrar, srv YubikeyServiceSer
 	s.RegisterService(&YubikeyService_ServiceDesc, srv)
 }
 
-func _YubikeyService_GetFirmwareVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFirmwareVersionsRequest)
+func _YubikeyService_GetVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetVersionsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(YubikeyServiceServer).GetFirmwareVersions(ctx, in)
+		return srv.(YubikeyServiceServer).GetVersions(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/yubikey.v1.YubikeyService/GetFirmwareVersions",
+		FullMethod: "/yubikey.v1.YubikeyService/GetVersions",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(YubikeyServiceServer).GetFirmwareVersions(ctx, req.(*GetFirmwareVersionsRequest))
+		return srv.(YubikeyServiceServer).GetVersions(ctx, req.(*GetVersionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -96,8 +96,8 @@ var YubikeyService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*YubikeyServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetFirmwareVersions",
-			Handler:    _YubikeyService_GetFirmwareVersions_Handler,
+			MethodName: "GetVersions",
+			Handler:    _YubikeyService_GetVersions_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

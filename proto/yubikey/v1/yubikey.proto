@@ -6,23 +6,23 @@ import "google/api/annotations.proto";
 
 option go_package = "github.com/takumin/ykmgr/internal/protobuf/yubikey";
 
-message FirmwareVersion {
+message Version {
   uint32 major = 1;
   uint32 minor = 2;
   uint32 patch = 3;
 }
 
-message GetFirmwareVersionsRequest {
+message GetVersionsRequest {
 }
 
-message GetFirmwareVersionsResponse {
-  repeated FirmwareVersion firmware_versions = 1;
+message GetVersionsResponse {
+  repeated Version versions = 1;
 }
 
 service YubikeyService {
-  rpc GetFirmwareVersions(GetFirmwareVersionsRequest) returns (GetFirmwareVersionsResponse) {
+  rpc GetVersions(GetVersionsRequest) returns (GetVersionsResponse) {
     option (google.api.http) = {
-      get: "/v1/yubikey/firmware-versions"
+      get: "/v1/yubikey/versions"
     };
   }
 }

@@ -16,14 +16,14 @@
     "application/json"
   ],
   "paths": {
-    "/v1/yubikey/firmware-versions": {
+    "/v1/yubikey/versions": {
       "get": {
-        "operationId": "YubikeyService_GetFirmwareVersions",
+        "operationId": "YubikeyService_GetVersions",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetFirmwareVersionsResponse"
+              "$ref": "#/definitions/v1GetVersionsResponse"
             }
           },
           "default": {
@@ -67,7 +67,18 @@
         }
       }
     },
-    "v1FirmwareVersion": {
+    "v1GetVersionsResponse": {
+      "type": "object",
+      "properties": {
+        "versions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Version"
+          }
+        }
+      }
+    },
+    "v1Version": {
       "type": "object",
       "properties": {
         "major": {
@@ -81,17 +92,6 @@
         "patch": {
           "type": "integer",
           "format": "int64"
-        }
-      }
-    },
-    "v1GetFirmwareVersionsResponse": {
-      "type": "object",
-      "properties": {
-        "firmwareVersions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1FirmwareVersion"
-          }
         }
       }
     }

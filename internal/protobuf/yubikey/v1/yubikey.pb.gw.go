@@ -31,20 +31,20 @@ var _ = runtime.String
 var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
-func request_YubikeyService_GetFirmwareVersions_0(ctx context.Context, marshaler runtime.Marshaler, client YubikeyServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetFirmwareVersionsRequest
+func request_YubikeyService_GetVersions_0(ctx context.Context, marshaler runtime.Marshaler, client YubikeyServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetVersionsRequest
 	var metadata runtime.ServerMetadata
 
-	msg, err := client.GetFirmwareVersions(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.GetVersions(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_YubikeyService_GetFirmwareVersions_0(ctx context.Context, marshaler runtime.Marshaler, server YubikeyServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetFirmwareVersionsRequest
+func local_request_YubikeyService_GetVersions_0(ctx context.Context, marshaler runtime.Marshaler, server YubikeyServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetVersionsRequest
 	var metadata runtime.ServerMetadata
 
-	msg, err := server.GetFirmwareVersions(ctx, &protoReq)
+	msg, err := server.GetVersions(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -55,19 +55,19 @@ func local_request_YubikeyService_GetFirmwareVersions_0(ctx context.Context, mar
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterYubikeyServiceHandlerFromEndpoint instead.
 func RegisterYubikeyServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server YubikeyServiceServer) error {
 
-	mux.Handle("GET", pattern_YubikeyService_GetFirmwareVersions_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_YubikeyService_GetVersions_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/yubikey.v1.YubikeyService/GetFirmwareVersions", runtime.WithHTTPPathPattern("/v1/yubikey/firmware-versions"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/yubikey.v1.YubikeyService/GetVersions", runtime.WithHTTPPathPattern("/v1/yubikey/versions"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_YubikeyService_GetFirmwareVersions_0(ctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_YubikeyService_GetVersions_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -75,7 +75,7 @@ func RegisterYubikeyServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 			return
 		}
 
-		forward_YubikeyService_GetFirmwareVersions_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_YubikeyService_GetVersions_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -120,24 +120,24 @@ func RegisterYubikeyServiceHandler(ctx context.Context, mux *runtime.ServeMux, c
 // "YubikeyServiceClient" to call the correct interceptors.
 func RegisterYubikeyServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client YubikeyServiceClient) error {
 
-	mux.Handle("GET", pattern_YubikeyService_GetFirmwareVersions_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_YubikeyService_GetVersions_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/yubikey.v1.YubikeyService/GetFirmwareVersions", runtime.WithHTTPPathPattern("/v1/yubikey/firmware-versions"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/yubikey.v1.YubikeyService/GetVersions", runtime.WithHTTPPathPattern("/v1/yubikey/versions"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_YubikeyService_GetFirmwareVersions_0(ctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_YubikeyService_GetVersions_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_YubikeyService_GetFirmwareVersions_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_YubikeyService_GetVersions_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -145,9 +145,9 @@ func RegisterYubikeyServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 }
 
 var (
-	pattern_YubikeyService_GetFirmwareVersions_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "yubikey", "firmware-versions"}, ""))
+	pattern_YubikeyService_GetVersions_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "yubikey", "versions"}, ""))
 )
 
 var (
-	forward_YubikeyService_GetFirmwareVersions_0 = runtime.ForwardResponseMessage
+	forward_YubikeyService_GetVersions_0 = runtime.ForwardResponseMessage
 )
