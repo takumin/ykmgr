@@ -26,9 +26,9 @@ WORKDIR /src/github.com/takumin/ykmgr
 COPY go.mod .
 COPY go.sum .
 RUN go mod download
+COPY tools tools
+RUN cat tools/tools.go | grep _ | awk -F'"' '{print $2}' | xargs -tI % go install %
 COPY . .
-RUN make tools
-RUN make generate
 
 FROM builder AS builder-i386
 ENV CC=i686-linux-gnu-gcc

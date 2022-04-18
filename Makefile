@@ -27,6 +27,10 @@ else
 ARCHIVE_BASENAME := $(APPNAME)-$(REVISION)-$(OS)-$(ARCH)
 endif
 
+DOCKER_REPOSITORY         := takumi/ykmgr
+DEBIAN_BUILDER_DOCKERFILE := build/docker/builder-debian/Dockerfile
+ALPINE_BUILDER_DOCKERFILE := build/docker/builder-alpine/Dockerfile
+
 .PHONY: all
 all: bufbuild generate lint vet test build
 
@@ -89,12 +93,22 @@ archive: build
 	cd dist/$(BINNAME) && 7z a ../$(ARCHIVE_BASENAME).zip *
 	cd dist && $(SHA256SUM) *.zip | tee $(ARCHIVE_BASENAME).zip.sha256sum
 
-.PHONY: crossbuild-debian
-crossbuild-debian:
+.PHONY: dockerbuild
+dockerbuild: dockerbuild-debian dockerbuild-alpine
 	mkdir -p dist
-	docker build -t takumi/ykmgr:debian11-crossbuild -f build/docker/builder-debian/Dockerfile --target crossbuild .
-	docker build -t takumi/ykmgr:debian11-distribution -f build/docker/builder-debian/Dockerfile --target distribution .
-	docker run --rm -i -t -v $(CURDIR)/dist:/dist takumi/ykmgr:debian11-distribution find /opt -type f -name '*.zip*' -exec cp {} /dist \;
+	docker run --rm -i -t -v $(CURDIR)/dist:/dist $(DOCKER_REPOSITORY):debian-distribution find /opt -type f -name '*.zip*' -exec cp {} /dist \;
+	docker run --rm -i -t -v $(CURDIR)/dist:/dist $(DOCKER_REPOSITORY):alpine-distribution find /opt -type f -name '*.zip*' -exec cp {} /dist \;
+
+.PHONY: dockerbuild-debian
+dockerbuild-debian:
+	docker build -t $(DOCKER_REPOSITORY):debian-crossbuild -f $(DEBIAN_BUILDER_DOCKERFILE) --target crossbuild .
+	docker build -t $(DOCKER_REPOSITORY):debian-builder -f $(DEBIAN_BUILDER_DOCKERFILE) --target builder .
+	docker build -t $(DOCKER_REPOSITORY):debian-distribution -f $(DEBIAN_BUILDER_DOCKERFILE) --target distribution .
+
+.PHONY: dockerbuild-alpine
+dockerbuild-alpine:
+	docker build -t $(DOCKER_REPOSITORY):alpine-builder -f $(ALPINE_BUILDER_DOCKERFILE) --target builder .
+	docker build -t $(DOCKER_REPOSITORY):alpine-distribution -f $(ALPINE_BUILDER_DOCKERFILE) --target distribution .
 
 .PHONY: release
 release:
