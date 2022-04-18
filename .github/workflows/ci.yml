@@ -87,17 +87,17 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ steps.cache-dir.outputs.go-build }}
-        key: ${{ runner.os }}-go-${{ matrix.go }}-build-${{ hashFiles('**/go.sum') }}-${{ hashFiles('.github/actions-cache-version') }}
+        key: ${{ matrix.os }}-go-${{ matrix.go }}-build-${{ hashFiles('**/go.sum') }}-${{ hashFiles('.github/actions-cache-version') }}
     - name: Go Mod Cache
       uses: actions/cache@v3
       with:
         path: ${{ steps.cache-dir.outputs.go-mod }}
-        key: ${{ runner.os }}-go-${{ matrix.go }}-mod-${{ hashFiles('**/go.sum') }}-${{ hashFiles('.github/actions-cache-version') }}
+        key: ${{ matrix.os }}-go-${{ matrix.go }}-mod-${{ hashFiles('**/go.sum') }}-${{ hashFiles('.github/actions-cache-version') }}
     - name: Buf Mod Cache
       uses: actions/cache@v3
       with:
         path: ${{ steps.cache-dir.outputs.buf-mod }}
-        key: ${{ runner.os }}-buf-${{ matrix.go }}-mod-${{ hashFiles('**/buf.lock') }}-${{ hashFiles('.github/actions-cache-version') }}
+        key: ${{ matrix.os }}-buf-${{ matrix.go }}-mod-${{ hashFiles('**/buf.lock') }}-${{ hashFiles('.github/actions-cache-version') }}
     ################################################################################
     # Go
     ################################################################################
