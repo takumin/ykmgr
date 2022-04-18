@@ -4,6 +4,7 @@ import (
 	"context"
 	"net"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/go-piv/piv-go/piv"
@@ -16,10 +17,20 @@ import (
 
 	"github.com/takumin/ykmgr/internal/config"
 	"github.com/takumin/ykmgr/internal/protobuf/yubikey/v1"
+	"github.com/takumin/ykmgr/internal/resolver"
 )
 
 func NewCommands(c *config.Config, f []cli.Flag) *cli.Command {
-	flags := []cli.Flag{}
+	flags := []cli.Flag{
+		&cli.StringFlag{
+			Name:        "listen-url",
+			Aliases:     []string{"listen"},
+			Usage:       "listen url",
+			EnvVars:     []string{"LISTEN_URL", "LISTEN"},
+			Value:       c.Server.ListenURL,
+			Destination: &c.Server.ListenURL,
+		},
+	}
 	return &cli.Command{
 		Name:    "server",
 		Aliases: []string{"s", "serv"},
@@ -46,9 +57,14 @@ func action(c *config.Config) func(ctx *cli.Context) error {
 		)
 		yubikey.RegisterYubikeyServiceServer(srv, &server{})
 
+		resolver, err := resolver.Parse(c.Server.ListenURL)
+		if err != nil {
+			return err
+		}
+
 		conn, err := grpc.DialContext(
 			ctx.Context,
-			c.Connection.Endpoint,
+			resolver.GrpcEndpoint(),
 			grpc.WithTransportCredentials(insecure.NewCredentials()),
 		)
 		if err != nil {
@@ -60,10 +76,15 @@ func action(c *config.Config) func(ctx *cli.Context) error {
 			return err
 		}
 
-		listener, err := net.Listen("tcp", c.Connection.Endpoint)
+		if resolver.IsUnixDomainSocket() {
+			os.RemoveAll(resolver.Address())
+		}
+
+		listener, err := net.Listen(resolver.Network(), resolver.Address())
 		if err != nil {
 			return err
 		}
+		defer listener.Close()
 
 		return http.Serve(listener, h2c.NewHandler(
 			httpGrpcRouter(srv, router),

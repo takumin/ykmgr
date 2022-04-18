@@ -10,8 +10,14 @@ func (o LogLevel) Apply(c *Config) {
 	c.LogLevel = string(o)
 }
 
-type ConnectionEndpoint string
+type ServerListenURL string
 
-func (o ConnectionEndpoint) Apply(c *Config) {
-	c.Connection.Endpoint = string(o)
+func (o ServerListenURL) Apply(c *Config) {
+	c.Server.ListenURL = string(o)
+}
+
+type ClientEndpoint string
+
+func (o ClientEndpoint) Apply(c *Config) {
+	c.Client.Endpoint = string(o)
 }

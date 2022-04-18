@@ -9,10 +9,20 @@ import (
 
 	"github.com/takumin/ykmgr/internal/config"
 	"github.com/takumin/ykmgr/internal/protobuf/yubikey/v1"
+	"github.com/takumin/ykmgr/internal/resolver"
 )
 
 func NewCommands(c *config.Config, f []cli.Flag) *cli.Command {
-	flags := []cli.Flag{}
+	flags := []cli.Flag{
+		&cli.StringFlag{
+			Name:        "endpoint",
+			Aliases:     []string{"ep"},
+			Usage:       "connect endpoint url",
+			EnvVars:     []string{"ENDPOINT"},
+			Value:       c.Client.Endpoint,
+			Destination: &c.Client.Endpoint,
+		},
+	}
 	return &cli.Command{
 		Name:    "client",
 		Aliases: []string{"c", "cli"},
@@ -24,9 +34,14 @@ func NewCommands(c *config.Config, f []cli.Flag) *cli.Command {
 
 func action(c *config.Config) func(ctx *cli.Context) error {
 	return func(ctx *cli.Context) error {
+		resolver, err := resolver.Parse(c.Server.ListenURL)
+		if err != nil {
+			return err
+		}
+
 		conn, err := grpc.DialContext(
 			ctx.Context,
-			c.Connection.Endpoint,
+			resolver.GrpcEndpoint(),
 			grpc.WithTransportCredentials(insecure.NewCredentials()),
 		)
 		if err != nil {

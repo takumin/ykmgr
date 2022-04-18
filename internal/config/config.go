@@ -3,7 +3,11 @@ package config
 type Config struct {
 	LogLevel string
 
-	Connection struct {
+	Server struct {
+		ListenURL string
+	}
+
+	Client struct {
 		Endpoint string
 	}
 }

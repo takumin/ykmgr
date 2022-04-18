@@ -22,7 +22,8 @@ var (
 
 func main() {
 	cfg := config.NewConfig(
-		config.ConnectionEndpoint("127.0.0.1:8080"),
+		config.ServerListenURL("unix:///tmp/ykmgr.sock"),
+		config.ClientEndpoint("unix:///tmp/ykmgr.sock"),
 	)
 
 	flags := []cli.Flag{
@@ -33,14 +34,6 @@ func main() {
 			EnvVars:     []string{"LOG_LEVEL"},
 			Value:       cfg.LogLevel,
 			Destination: &cfg.LogLevel,
-		},
-		&cli.StringFlag{
-			Name:        "endpoint",
-			Aliases:     []string{"ep"},
-			Usage:       "api endpoint",
-			EnvVars:     []string{"ENDPOINT"},
-			Value:       cfg.Connection.Endpoint,
-			Destination: &cfg.Connection.Endpoint,
 		},
 	}
 
