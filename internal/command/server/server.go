@@ -97,7 +97,7 @@ type server struct {
 	yubikey.UnimplementedYubikeyServiceServer
 }
 
-func (s *server) GetFirmwareVersion(ctx context.Context, req *yubikey.GetFirmwareVersionRequest) (*yubikey.GetFirmwareVersionResponse, error) {
+func (s *server) GetFirmwareVersions(ctx context.Context, req *yubikey.GetFirmwareVersionsRequest) (*yubikey.GetFirmwareVersionsResponse, error) {
 	cards, err := piv.Cards()
 	if err != nil {
 		return nil, err
@@ -118,7 +118,7 @@ func (s *server) GetFirmwareVersion(ctx context.Context, req *yubikey.GetFirmwar
 		}
 	}
 
-	return &yubikey.GetFirmwareVersionResponse{
+	return &yubikey.GetFirmwareVersionsResponse{
 		FirmwareVersions: versions,
 	}, nil
 }

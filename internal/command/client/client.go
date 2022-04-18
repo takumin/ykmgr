@@ -49,9 +49,9 @@ func action(c *config.Config) func(ctx *cli.Context) error {
 		}
 
 		client := yubikey.NewYubikeyServiceClient(conn)
-		result, err := client.GetFirmwareVersion(
+		result, err := client.GetFirmwareVersions(
 			ctx.Context,
-			&yubikey.GetFirmwareVersionRequest{},
+			&yubikey.GetFirmwareVersionsRequest{},
 		)
 		if err != nil {
 			return err

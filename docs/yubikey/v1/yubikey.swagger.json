@@ -18,12 +18,12 @@
   "paths": {
     "/v1/yubikey/firmware-version": {
       "get": {
-        "operationId": "YubikeyService_GetFirmwareVersion",
+        "operationId": "YubikeyService_GetFirmwareVersions",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetFirmwareVersionResponse"
+              "$ref": "#/definitions/v1GetFirmwareVersionsResponse"
             }
           },
           "default": {
@@ -84,7 +84,7 @@
         }
       }
     },
-    "v1GetFirmwareVersionResponse": {
+    "v1GetFirmwareVersionsResponse": {
       "type": "object",
       "properties": {
         "firmwareVersions": {

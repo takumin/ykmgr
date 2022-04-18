@@ -12,15 +12,15 @@ message FirmwareVersion {
   uint32 patch = 3;
 }
 
-message GetFirmwareVersionRequest {
+message GetFirmwareVersionsRequest {
 }
 
-message GetFirmwareVersionResponse {
+message GetFirmwareVersionsResponse {
   repeated FirmwareVersion firmware_versions = 1;
 }
 
 service YubikeyService {
-  rpc GetFirmwareVersion(GetFirmwareVersionRequest) returns (GetFirmwareVersionResponse) {
+  rpc GetFirmwareVersions(GetFirmwareVersionsRequest) returns (GetFirmwareVersionsResponse) {
     option (google.api.http) = {
       get: "/v1/yubikey/firmware-version"
     };

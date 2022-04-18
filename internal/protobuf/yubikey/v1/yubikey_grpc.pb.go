@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type YubikeyServiceClient interface {
-	GetFirmwareVersion(ctx context.Context, in *GetFirmwareVersionRequest, opts ...grpc.CallOption) (*GetFirmwareVersionResponse, error)
+	GetFirmwareVersions(ctx context.Context, in *GetFirmwareVersionsRequest, opts ...grpc.CallOption) (*GetFirmwareVersionsResponse, error)
 }
 
 type yubikeyServiceClient struct {
@@ -33,9 +33,9 @@ func NewYubikeyServiceClient(cc grpc.ClientConnInterface) YubikeyServiceClient {
 	return &yubikeyServiceClient{cc}
 }
 
-func (c *yubikeyServiceClient) GetFirmwareVersion(ctx context.Context, in *GetFirmwareVersionRequest, opts ...grpc.CallOption) (*GetFirmwareVersionResponse, error) {
-	out := new(GetFirmwareVersionResponse)
-	err := c.cc.Invoke(ctx, "/yubikey.v1.YubikeyService/GetFirmwareVersion", in, out, opts...)
+func (c *yubikeyServiceClient) GetFirmwareVersions(ctx context.Context, in *GetFirmwareVersionsRequest, opts ...grpc.CallOption) (*GetFirmwareVersionsResponse, error) {
+	out := new(GetFirmwareVersionsResponse)
+	err := c.cc.Invoke(ctx, "/yubikey.v1.YubikeyService/GetFirmwareVersions", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (c *yubikeyServiceClient) GetFirmwareVersion(ctx context.Context, in *GetFi
 // All implementations must embed UnimplementedYubikeyServiceServer
 // for forward compatibility
 type YubikeyServiceServer interface {
-	GetFirmwareVersion(context.Context, *GetFirmwareVersionRequest) (*GetFirmwareVersionResponse, error)
+	GetFirmwareVersions(context.Context, *GetFirmwareVersionsRequest) (*GetFirmwareVersionsResponse, error)
 	mustEmbedUnimplementedYubikeyServiceServer()
 }
 
@@ -54,8 +54,8 @@ type YubikeyServiceServer interface {
 type UnimplementedYubikeyServiceServer struct {
 }
 
-func (UnimplementedYubikeyServiceServer) GetFirmwareVersion(context.Context, *GetFirmwareVersionRequest) (*GetFirmwareVersionResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFirmwareVersion not implemented")
+func (UnimplementedYubikeyServiceServer) GetFirmwareVersions(context.Context, *GetFirmwareVersionsRequest) (*GetFirmwareVersionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFirmwareVersions not implemented")
 }
 func (UnimplementedYubikeyServiceServer) mustEmbedUnimplementedYubikeyServiceServer() {}
 
@@ -70,20 +70,20 @@ func RegisterYubikeyServiceServer(s grpc.ServiceRegistrar, srv YubikeyServiceSer
 	s.RegisterService(&YubikeyService_ServiceDesc, srv)
 }
 
-func _YubikeyService_GetFirmwareVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFirmwareVersionRequest)
+func _YubikeyService_GetFirmwareVersions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFirmwareVersionsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(YubikeyServiceServer).GetFirmwareVersion(ctx, in)
+		return srv.(YubikeyServiceServer).GetFirmwareVersions(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/yubikey.v1.YubikeyService/GetFirmwareVersion",
+		FullMethod: "/yubikey.v1.YubikeyService/GetFirmwareVersions",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(YubikeyServiceServer).GetFirmwareVersion(ctx, req.(*GetFirmwareVersionRequest))
+		return srv.(YubikeyServiceServer).GetFirmwareVersions(ctx, req.(*GetFirmwareVersionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -96,8 +96,8 @@ var YubikeyService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*YubikeyServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetFirmwareVersion",
-			Handler:    _YubikeyService_GetFirmwareVersion_Handler,
+			MethodName: "GetFirmwareVersions",
+			Handler:    _YubikeyService_GetFirmwareVersions_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
