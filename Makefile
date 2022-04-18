@@ -89,6 +89,13 @@ archive: build
 	cd dist/$(BINNAME) && 7z a ../$(ARCHIVE_BASENAME).zip *
 	cd dist && $(SHA256SUM) *.zip | tee $(ARCHIVE_BASENAME).zip.sha256sum
 
+.PHONY: crossbuild-debian
+crossbuild-debian:
+	mkdir -p dist
+	docker build -t takumi/ykmgr:debian11-crossbuild -f build/docker/builder-debian/Dockerfile --target crossbuild .
+	docker build -t takumi/ykmgr:debian11-distribution -f build/docker/builder-debian/Dockerfile --target distribution .
+	docker run --rm -i -t -v $(CURDIR)/dist:/dist takumi/ykmgr:debian11-distribution find /opt -type f -name '*.zip*' -exec cp {} /dist \;
+
 .PHONY: release
 release:
 	gh release create --generate-notes
