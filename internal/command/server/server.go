@@ -123,3 +123,30 @@ func (s *server) GetVersions(ctx context.Context, req *yubikey.GetVersionsReques
 		Versions: versions,
 	}, nil
 }
+
+func (s *server) GetSerials(ctx context.Context, req *yubikey.GetSerialsRequest) (*yubikey.GetSerialsResponse, error) {
+	cards, err := piv.Cards()
+	if err != nil {
+		return nil, err
+	}
+
+	serials := make([]uint32, len(cards))
+	for i, v := range cards {
+		yk, err := piv.Open(v)
+		if err != nil {
+			return nil, err
+		}
+		defer yk.Close()
+
+		v, err := yk.Serial()
+		if err != nil {
+			return nil, err
+		}
+
+		serials[i] = v
+	}
+
+	return &yubikey.GetSerialsResponse{
+		Serials: serials,
+	}, nil
+}

@@ -49,7 +49,8 @@ func action(c *config.Config) func(ctx *cli.Context) error {
 		}
 
 		client := yubikey.NewYubikeyServiceClient(conn)
-		result, err := client.GetVersions(
+
+		versions, err := client.GetVersions(
 			ctx.Context,
 			&yubikey.GetVersionsRequest{},
 		)
@@ -57,8 +58,20 @@ func action(c *config.Config) func(ctx *cli.Context) error {
 			return err
 		}
 
-		for _, v := range result.Versions {
+		for _, v := range versions.Versions {
 			log.Printf("Version: %d.%d.%d\n", v.Major, v.Minor, v.Patch)
+		}
+
+		serials, err := client.GetSerials(
+			ctx.Context,
+			&yubikey.GetSerialsRequest{},
+		)
+		if err != nil {
+			return err
+		}
+
+		for _, v := range serials.Serials {
+			log.Printf("Serial: %d\n", v)
 		}
 
 		return nil

@@ -19,10 +19,22 @@ message GetVersionsResponse {
   repeated Version versions = 1;
 }
 
+message GetSerialsRequest {
+}
+
+message GetSerialsResponse {
+  repeated uint32 serials = 1;
+}
+
 service YubikeyService {
   rpc GetVersions(GetVersionsRequest) returns (GetVersionsResponse) {
     option (google.api.http) = {
       get: "/v1/yubikey/versions"
+    };
+  }
+  rpc GetSerials(GetSerialsRequest) returns (GetSerialsResponse) {
+    option (google.api.http) = {
+      get: "/v1/yubikey/serials"
     };
   }
 }
