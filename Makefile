@@ -19,6 +19,8 @@ else
 SHA256SUM := sha256sum
 endif
 
+BINNAME := $(APPNAME)-$(OS)-$(ARCH)
+
 ifeq ($(RELEASE),true)
 ARCHIVE_BASENAME := $(APPNAME)-$(VERSION)-$(OS)-$(ARCH)
 else
@@ -62,17 +64,17 @@ test:
 	CC=$(CC) CXX=$(CXX) CGO_ENABLED=1 go test -race ./...
 
 .PHONY: build
-build: bin/$(APPNAME)
-bin/$(APPNAME): $(SRCS)
+build: bin/$(BINNAME)
+bin/$(BINNAME): $(SRCS)
 	CC=$(CC) CXX=$(CXX) CGO_ENABLED=1 go build $(LDFLAGS) -o $@
 
 .PHONY: server
 server: build
-	bin/$(APPNAME) server
+	bin/$(BINNAME) server
 
 .PHONY: client
 client: build
-	bin/$(APPNAME) client
+	bin/$(BINNAME) client
 
 .PHONY: install
 install: build
@@ -80,11 +82,11 @@ install: build
 
 .PHONY: archive
 archive: build
-	mkdir -p dist/archive
-	cp README.md dist/archive
-	cp LICENSE dist/archive
-	cp bin/$(APPNAME) dist/archive
-	cd dist/archive && 7z a ../$(ARCHIVE_BASENAME).zip *
+	mkdir -p dist/$(BINNAME)
+	cp README.md dist/$(BINNAME)
+	cp LICENSE dist/$(BINNAME)
+	cp bin/$(BINNAME) dist/$(BINNAME)/$(APPNAME)
+	cd dist/$(BINNAME) && 7z a ../$(ARCHIVE_BASENAME).zip *
 	cd dist && $(SHA256SUM) *.zip | tee $(ARCHIVE_BASENAME).zip.sha256sum
 
 .PHONY: release
