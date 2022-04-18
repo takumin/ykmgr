@@ -1,34 +1,28 @@
-OS := $(strip $(shell uname | tr A-Z a-z | sed -e 's/mingw64.*/windows/'))
-ARCH := $(strip $(shell uname -m | tr A-Z a-z))
+OS       := $(strip $(shell uname | tr A-Z a-z | sed -e 's/mingw64.*/windows/'))
+ARCH     := $(strip $(shell uname -m | tr A-Z a-z))
+APPNAME  := $(strip $(shell basename $(CURDIR)))
+VERSION  := $(strip $(shell git describe --abbrev=0 --tags 2>/dev/null))
+REVISION := $(strip $(shell git rev-parse HEAD))
+SRCS     := $(shell find . -type f -name '*.go' -or -name '*.proto')
 
-APPNAME := $(shell basename $(CURDIR))
-
-ifeq (,$(shell git describe --abbrev=0 --tags 2>/dev/null))
-VERSION := v0.0.0
-else
-VERSION := $(shell git describe --abbrev=0 --tags)
-endif
-
-ifeq (,$(shell git rev-parse --short HEAD 2>/dev/null))
-REVISION := unknown
-else
-REVISION := $(shell git rev-parse --short HEAD)
-endif
+LDFLAGS_APPNAME  := -X "main.AppName=$(APPNAME)"
+LDFLAGS_VERSION  := -X "main.Version=$(if $(VERSION),$(VERSION),v0.0.0)"
+LDFLAGS_REVISION := -X "main.Revision=$(if $(REVISION),$(REVISION),unknown)"
+LDFLAGS          := -ldflags '-s -w $(LDFLAGS_APPNAME) $(LDFLAGS_VERSION) $(LDFLAGS_REVISION)'
 
 CC ?= gcc
 CXX ?= g++
-
-LDFLAGS_APPNAME  := -X "main.AppName=$(APPNAME)"
-LDFLAGS_VERSION  := -X "main.Version=$(VERSION)"
-LDFLAGS_REVISION := -X "main.Revision=$(REVISION)"
-LDFLAGS          := -ldflags '-s -w $(LDFLAGS_APPNAME) $(LDFLAGS_VERSION) $(LDFLAGS_REVISION)'
-
-SRCS := $(shell find . -type f -name '*.go' -or -name '*.proto')
 
 ifeq ($(OS),darwin)
 SHA256SUM := shasum -a 256
 else
 SHA256SUM := sha256sum
+endif
+
+ifeq ($(RELEASE),true)
+ARCHIVE_BASENAME := $(APPNAME)-$(VERSION)-$(OS)-$(ARCH)
+else
+ARCHIVE_BASENAME := $(APPNAME)-$(REVISION)-$(OS)-$(ARCH)
 endif
 
 .PHONY: all
@@ -84,13 +78,8 @@ archive: build
 	cp README.md dist/archive
 	cp LICENSE dist/archive
 	cp bin/$(APPNAME) dist/archive
-ifeq ($(RELEASE),true)
-	cd dist/archive && 7z a ../$(APPNAME)-$(VERSION)-$(OS)-$(ARCH).zip *
-	cd dist && $(SHA256SUM) *.zip | tee $(APPNAME)-$(VERSION)-$(OS)-$(ARCH).zip.sha256sum
-else
-	cd dist/archive && 7z a ../$(APPNAME)-$(VERSION)-$(REVISION)-$(OS)-$(ARCH).zip *
-	cd dist && $(SHA256SUM) *.zip | tee $(APPNAME)-$(VERSION)-$(REVISION)-$(OS)-$(ARCH).zip.sha256sum
-endif
+	cd dist/archive && 7z a ../$(ARCHIVE_BASENAME).zip *
+	cd dist && $(SHA256SUM) *.zip | tee $(ARCHIVE_BASENAME).zip.sha256sum
 
 .PHONY: release
 release:
