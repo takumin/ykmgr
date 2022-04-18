@@ -107,6 +107,10 @@ jobs:
       run: go mod tidy
     - name: Go Tools
       run: make tools
+    - name: Go BufBuild
+      run: make bufbuild
+    - name: Go Generate
+      run: make generate
     - name: Go Vet
       run: make vet
     - name: Go Lint

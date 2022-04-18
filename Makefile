@@ -26,7 +26,7 @@ ARCHIVE_BASENAME := $(APPNAME)-$(REVISION)-$(OS)-$(ARCH)
 endif
 
 .PHONY: all
-all: lint vet test build
+all: bufbuild generate lint vet test build
 
 .PHONY: tools
 tools:
@@ -39,9 +39,18 @@ tools:
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
 	go install honnef.co/go/tools/cmd/staticcheck
 
+.PHONY: bufbuild
+bufbuild:
+	buf lint
+	buf build
+	buf generate
+
+.PHONY: generate
+generate:
+	CC=$(CC) CXX=$(CXX) CGO_ENABLED=1 go generate $(LDFLAGS) ./...
+
 .PHONY: lint
 lint:
-	buf lint
 	staticcheck ./...
 
 .PHONY: vet
@@ -55,9 +64,6 @@ test:
 .PHONY: build
 build: bin/$(APPNAME)
 bin/$(APPNAME): $(SRCS)
-	buf build
-	buf generate
-	CC=$(CC) CXX=$(CXX) CGO_ENABLED=1 go generate $(LDFLAGS) ./...
 	CC=$(CC) CXX=$(CXX) CGO_ENABLED=1 go build $(LDFLAGS) -o $@
 
 .PHONY: server
