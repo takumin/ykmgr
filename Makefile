@@ -32,7 +32,7 @@ SHA256SUM := sha256sum
 endif
 
 .PHONY: all
-all: lint vet build
+all: lint vet test build
 
 .PHONY: tools
 tools:
