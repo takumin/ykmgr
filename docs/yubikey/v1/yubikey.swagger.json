@@ -16,7 +16,7 @@
     "application/json"
   ],
   "paths": {
-    "/v1/yubikey/firmware-version": {
+    "/v1/yubikey/firmware-versions": {
       "get": {
         "operationId": "YubikeyService_GetFirmwareVersions",
         "responses": {

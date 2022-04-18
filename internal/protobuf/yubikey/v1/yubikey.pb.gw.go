@@ -62,7 +62,7 @@ func RegisterYubikeyServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/yubikey.v1.YubikeyService/GetFirmwareVersions", runtime.WithHTTPPathPattern("/v1/yubikey/firmware-version"))
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/yubikey.v1.YubikeyService/GetFirmwareVersions", runtime.WithHTTPPathPattern("/v1/yubikey/firmware-versions"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -125,7 +125,7 @@ func RegisterYubikeyServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
-		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/yubikey.v1.YubikeyService/GetFirmwareVersions", runtime.WithHTTPPathPattern("/v1/yubikey/firmware-version"))
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/yubikey.v1.YubikeyService/GetFirmwareVersions", runtime.WithHTTPPathPattern("/v1/yubikey/firmware-versions"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -145,7 +145,7 @@ func RegisterYubikeyServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 }
 
 var (
-	pattern_YubikeyService_GetFirmwareVersions_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "yubikey", "firmware-version"}, ""))
+	pattern_YubikeyService_GetFirmwareVersions_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "yubikey", "firmware-versions"}, ""))
 )
 
 var (

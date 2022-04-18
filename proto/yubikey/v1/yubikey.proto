@@ -22,7 +22,7 @@ message GetFirmwareVersionsResponse {
 service YubikeyService {
   rpc GetFirmwareVersions(GetFirmwareVersionsRequest) returns (GetFirmwareVersionsResponse) {
     option (google.api.http) = {
-      get: "/v1/yubikey/firmware-version"
+      get: "/v1/yubikey/firmware-versions"
     };
   }
 }
