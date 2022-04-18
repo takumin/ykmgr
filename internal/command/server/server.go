@@ -111,10 +111,11 @@ func (s *server) GetFirmwareVersions(ctx context.Context, req *yubikey.GetFirmwa
 		}
 		defer yk.Close()
 
+		v := yk.Version()
 		versions[i] = &yubikey.FirmwareVersion{
-			Major: uint32(yk.Version().Major),
-			Minor: uint32(yk.Version().Minor),
-			Patch: uint32(yk.Version().Patch),
+			Major: uint32(v.Major),
+			Minor: uint32(v.Minor),
+			Patch: uint32(v.Patch),
 		}
 	}
 
