@@ -8,8 +8,8 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/takumin/ykmgr/internal/config"
-	"github.com/takumin/ykmgr/internal/protobuf/yubikey/v1"
 	"github.com/takumin/ykmgr/internal/resolver"
+	"github.com/takumin/ykmgr/pkg/yubikey/v1"
 )
 
 func NewCommands(c *config.Config, f []cli.Flag) *cli.Command {

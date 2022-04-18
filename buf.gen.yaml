@@ -1,15 +1,15 @@
 version: v1
 plugins:
 - name: go
-  out: internal/protobuf
+  out: pkg
   opt:
   - paths=source_relative
 - name: go-grpc
-  out: internal/protobuf
+  out: pkg
   opt:
   - paths=source_relative
 - name: grpc-gateway
-  out: internal/protobuf
+  out: pkg
   opt:
   - paths=source_relative
 - name: openapiv2
