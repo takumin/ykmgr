@@ -28,8 +28,9 @@ jobs:
       matrix:
         os:
         - ubuntu
-        - windows
         - macos
+        # TODO: Once Aqua is Windows-compatible, activate it.
+        # - windows
         go:
         - '1.17'
         - '1.18'
