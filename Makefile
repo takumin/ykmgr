@@ -32,18 +32,11 @@ DEBIAN_BUILDER_DOCKERFILE := build/docker/builder-debian/Dockerfile
 ALPINE_BUILDER_DOCKERFILE := build/docker/builder-alpine/Dockerfile
 
 .PHONY: all
-all: bufbuild generate lint vet test build
+all: tools bufbuild generate lint vet test build
 
 .PHONY: tools
 tools:
-	go install github.com/bufbuild/buf/cmd/buf
-	go install github.com/bufbuild/buf/cmd/protoc-gen-buf-breaking
-	go install github.com/bufbuild/buf/cmd/protoc-gen-buf-lint
-	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway
-	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2
-	go install google.golang.org/protobuf/cmd/protoc-gen-go
-	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
-	go install honnef.co/go/tools/cmd/staticcheck
+	aqua install --all
 
 .PHONY: bufbuild
 bufbuild:
