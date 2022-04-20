@@ -52,10 +52,16 @@ func httpGrpcRouter(grpcServer *grpc.Server, httpHandler http.Handler) http.Hand
 
 func action(c *config.Config) func(ctx *cli.Context) error {
 	return func(ctx *cli.Context) error {
-		srv := grpc.NewServer(
+		ykServer, err := NewServer()
+		if err != nil {
+			return err
+		}
+		defer ykServer.Close()
+
+		grpcServer := grpc.NewServer(
 			grpc.Creds(insecure.NewCredentials()),
 		)
-		yubikey.RegisterYubikeyServiceServer(srv, &server{})
+		yubikey.RegisterYubikeyServiceServer(grpcServer, ykServer)
 
 		resolver, err := resolver.Parse(c.Server.ListenURL)
 		if err != nil {
@@ -87,7 +93,7 @@ func action(c *config.Config) func(ctx *cli.Context) error {
 		defer listener.Close()
 
 		return http.Serve(listener, h2c.NewHandler(
-			httpGrpcRouter(srv, router),
+			httpGrpcRouter(grpcServer, router),
 			&http2.Server{},
 		))
 	}
@@ -95,62 +101,61 @@ func action(c *config.Config) func(ctx *cli.Context) error {
 
 type server struct {
 	yubikey.UnimplementedYubikeyServiceServer
+
+	yk map[uint32]*piv.YubiKey
 }
 
-func (s *server) GetSerials(ctx context.Context, req *yubikey.GetSerialsRequest) (*yubikey.GetSerialsResponse, error) {
+func NewServer() (*server, error) {
 	cards, err := piv.Cards()
 	if err != nil {
 		return nil, err
 	}
 
-	serials := make([]uint32, len(cards))
-	for i, v := range cards {
-		yk, err := piv.Open(v)
-		if err != nil {
-			return nil, err
-		}
-		defer yk.Close()
-
-		v, err := yk.Serial()
+	yubikeys := make(map[uint32]*piv.YubiKey, len(cards))
+	for _, v := range cards {
+		handle, err := piv.Open(v)
 		if err != nil {
 			return nil, err
 		}
 
-		serials[i] = v
+		serial, err := handle.Serial()
+		if err != nil {
+			return nil, err
+		}
+
+		yubikeys[serial] = handle
 	}
 
+	return &server{
+		yk: yubikeys,
+	}, nil
+}
+
+func (s *server) Close() map[uint32]error {
+	err := make(map[uint32]error, len(s.yk))
+	for k, v := range s.yk {
+		err[k] = v.Close()
+	}
+	return err
+}
+
+func (s *server) GetSerials(ctx context.Context, req *yubikey.GetSerialsRequest) (*yubikey.GetSerialsResponse, error) {
+	keys := make([]uint32, len(s.yk))
+	for k := range s.yk {
+		keys = append(keys, k)
+	}
 	return &yubikey.GetSerialsResponse{
-		Serials: serials,
+		Serials: keys,
 	}, nil
 }
 
 func (s *server) GetVersion(ctx context.Context, req *yubikey.GetVersionRequest) (*yubikey.GetVersionResponse, error) {
-	cards, err := piv.Cards()
-	if err != nil {
-		return nil, err
-	}
-
 	var version yubikey.Version
-	for _, v := range cards {
-		yk, err := piv.Open(v)
-		if err != nil {
-			return nil, err
-		}
-		defer yk.Close()
-
-		serial, err := yk.Serial()
-		if err != nil {
-			return nil, err
-		}
-
-		if req.GetSerial() == serial {
-			version.Major = uint32(yk.Version().Major)
-			version.Minor = uint32(yk.Version().Minor)
-			version.Patch = uint32(yk.Version().Patch)
-			break
-		}
+	if _, ok := s.yk[req.GetSerial()]; ok {
+		version.Major = uint32(s.yk[req.GetSerial()].Version().Major)
+		version.Minor = uint32(s.yk[req.GetSerial()].Version().Minor)
+		version.Patch = uint32(s.yk[req.GetSerial()].Version().Patch)
 	}
-
 	return &yubikey.GetVersionResponse{
 		Version: &version,
 	}, nil
