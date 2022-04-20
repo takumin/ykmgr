@@ -16,6 +16,37 @@
     "application/json"
   ],
   "paths": {
+    "/v1/yubikey/retries/{serial}": {
+      "get": {
+        "operationId": "YubikeyService_GetRetries",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetRetriesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "serial",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "YubikeyService"
+        ]
+      }
+    },
     "/v1/yubikey/serials": {
       "get": {
         "operationId": "YubikeyService_GetSerials",
@@ -95,6 +126,15 @@
           "items": {
             "$ref": "#/definitions/protobufAny"
           }
+        }
+      }
+    },
+    "v1GetRetriesResponse": {
+      "type": "object",
+      "properties": {
+        "retries": {
+          "type": "integer",
+          "format": "int64"
         }
       }
     },

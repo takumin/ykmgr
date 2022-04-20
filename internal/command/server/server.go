@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"net"
 	"net/http"
 	"os"
@@ -140,7 +141,7 @@ func (s *server) Close() map[uint32]error {
 }
 
 func (s *server) GetSerials(ctx context.Context, req *yubikey.GetSerialsRequest) (*yubikey.GetSerialsResponse, error) {
-	keys := make([]uint32, len(s.yk))
+	keys := make([]uint32, 0, len(s.yk))
 	for k := range s.yk {
 		keys = append(keys, k)
 	}
@@ -158,5 +159,18 @@ func (s *server) GetVersion(ctx context.Context, req *yubikey.GetVersionRequest)
 	}
 	return &yubikey.GetVersionResponse{
 		Version: &version,
+	}, nil
+}
+
+func (s *server) GetRetries(ctx context.Context, req *yubikey.GetRetriesRequest) (*yubikey.GetRetriesResponse, error) {
+	if _, ok := s.yk[req.GetSerial()]; !ok {
+		return nil, fmt.Errorf("not found serial")
+	}
+	retries, err := s.yk[req.GetSerial()].Retries()
+	if err != nil {
+		return nil, err
+	}
+	return &yubikey.GetRetriesResponse{
+		Retries: uint32(retries),
 	}, nil
 }

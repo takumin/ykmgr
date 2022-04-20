@@ -27,6 +27,14 @@ message GetVersionResponse {
   Version version = 1;
 }
 
+message GetRetriesRequest {
+  uint32 serial = 1;
+}
+
+message GetRetriesResponse {
+  uint32 retries = 1;
+}
+
 service YubikeyService {
   rpc GetSerials(GetSerialsRequest) returns (GetSerialsResponse) {
     option (google.api.http) = {
@@ -36,6 +44,11 @@ service YubikeyService {
   rpc GetVersion(GetVersionRequest) returns (GetVersionResponse) {
     option (google.api.http) = {
       get: "/v1/yubikey/version/{serial}"
+    };
+  }
+  rpc GetRetries(GetRetriesRequest) returns (GetRetriesResponse) {
+    option (google.api.http) = {
+      get: "/v1/yubikey/retries/{serial}"
     };
   }
 }

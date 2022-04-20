@@ -77,6 +77,21 @@ func action(c *config.Config) func(ctx *cli.Context) error {
 				version.Version.GetMinor(),
 				version.Version.GetPatch(),
 			)
+
+			retries, err := client.GetRetries(
+				ctx.Context,
+				&yubikey.GetRetriesRequest{
+					Serial: serial,
+				},
+			)
+			if err != nil {
+				return err
+			}
+
+			log.Printf(
+				"Retries: %d\n",
+				retries.GetRetries(),
+			)
 		}
 
 		return nil

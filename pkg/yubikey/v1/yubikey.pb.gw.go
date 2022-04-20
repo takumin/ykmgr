@@ -101,6 +101,58 @@ func local_request_YubikeyService_GetVersion_0(ctx context.Context, marshaler ru
 
 }
 
+func request_YubikeyService_GetRetries_0(ctx context.Context, marshaler runtime.Marshaler, client YubikeyServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetRetriesRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["serial"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serial")
+	}
+
+	protoReq.Serial, err = runtime.Uint32(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serial", err)
+	}
+
+	msg, err := client.GetRetries(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_YubikeyService_GetRetries_0(ctx context.Context, marshaler runtime.Marshaler, server YubikeyServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetRetriesRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["serial"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "serial")
+	}
+
+	protoReq.Serial, err = runtime.Uint32(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "serial", err)
+	}
+
+	msg, err := server.GetRetries(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
 // RegisterYubikeyServiceHandlerServer registers the http handlers for service YubikeyService to "mux".
 // UnaryRPC     :call YubikeyServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
@@ -152,6 +204,30 @@ func RegisterYubikeyServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		}
 
 		forward_YubikeyService_GetVersion_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("GET", pattern_YubikeyService_GetRetries_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/yubikey.v1.YubikeyService/GetRetries", runtime.WithHTTPPathPattern("/v1/yubikey/retries/{serial}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_YubikeyService_GetRetries_0(ctx, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_YubikeyService_GetRetries_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -238,6 +314,27 @@ func RegisterYubikeyServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 
 	})
 
+	mux.Handle("GET", pattern_YubikeyService_GetRetries_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/yubikey.v1.YubikeyService/GetRetries", runtime.WithHTTPPathPattern("/v1/yubikey/retries/{serial}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_YubikeyService_GetRetries_0(ctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_YubikeyService_GetRetries_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	return nil
 }
 
@@ -245,10 +342,14 @@ var (
 	pattern_YubikeyService_GetSerials_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "yubikey", "serials"}, ""))
 
 	pattern_YubikeyService_GetVersion_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"v1", "yubikey", "version", "serial"}, ""))
+
+	pattern_YubikeyService_GetRetries_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"v1", "yubikey", "retries", "serial"}, ""))
 )
 
 var (
 	forward_YubikeyService_GetSerials_0 = runtime.ForwardResponseMessage
 
 	forward_YubikeyService_GetVersion_0 = runtime.ForwardResponseMessage
+
+	forward_YubikeyService_GetRetries_0 = runtime.ForwardResponseMessage
 )

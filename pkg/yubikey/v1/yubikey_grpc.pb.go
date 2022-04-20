@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type YubikeyServiceClient interface {
 	GetSerials(ctx context.Context, in *GetSerialsRequest, opts ...grpc.CallOption) (*GetSerialsResponse, error)
 	GetVersion(ctx context.Context, in *GetVersionRequest, opts ...grpc.CallOption) (*GetVersionResponse, error)
+	GetRetries(ctx context.Context, in *GetRetriesRequest, opts ...grpc.CallOption) (*GetRetriesResponse, error)
 }
 
 type yubikeyServiceClient struct {
@@ -52,12 +53,22 @@ func (c *yubikeyServiceClient) GetVersion(ctx context.Context, in *GetVersionReq
 	return out, nil
 }
 
+func (c *yubikeyServiceClient) GetRetries(ctx context.Context, in *GetRetriesRequest, opts ...grpc.CallOption) (*GetRetriesResponse, error) {
+	out := new(GetRetriesResponse)
+	err := c.cc.Invoke(ctx, "/yubikey.v1.YubikeyService/GetRetries", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // YubikeyServiceServer is the server API for YubikeyService service.
 // All implementations must embed UnimplementedYubikeyServiceServer
 // for forward compatibility
 type YubikeyServiceServer interface {
 	GetSerials(context.Context, *GetSerialsRequest) (*GetSerialsResponse, error)
 	GetVersion(context.Context, *GetVersionRequest) (*GetVersionResponse, error)
+	GetRetries(context.Context, *GetRetriesRequest) (*GetRetriesResponse, error)
 	mustEmbedUnimplementedYubikeyServiceServer()
 }
 
@@ -70,6 +81,9 @@ func (UnimplementedYubikeyServiceServer) GetSerials(context.Context, *GetSerials
 }
 func (UnimplementedYubikeyServiceServer) GetVersion(context.Context, *GetVersionRequest) (*GetVersionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVersion not implemented")
+}
+func (UnimplementedYubikeyServiceServer) GetRetries(context.Context, *GetRetriesRequest) (*GetRetriesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRetries not implemented")
 }
 func (UnimplementedYubikeyServiceServer) mustEmbedUnimplementedYubikeyServiceServer() {}
 
@@ -120,6 +134,24 @@ func _YubikeyService_GetVersion_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _YubikeyService_GetRetries_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRetriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(YubikeyServiceServer).GetRetries(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/yubikey.v1.YubikeyService/GetRetries",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(YubikeyServiceServer).GetRetries(ctx, req.(*GetRetriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // YubikeyService_ServiceDesc is the grpc.ServiceDesc for YubikeyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +166,10 @@ var YubikeyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetVersion",
 			Handler:    _YubikeyService_GetVersion_Handler,
+		},
+		{
+			MethodName: "GetRetries",
+			Handler:    _YubikeyService_GetRetries_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
