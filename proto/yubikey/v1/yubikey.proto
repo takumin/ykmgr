@@ -12,13 +12,6 @@ message Version {
   uint32 patch = 3;
 }
 
-message GetVersionsRequest {
-}
-
-message GetVersionsResponse {
-  repeated Version versions = 1;
-}
-
 message GetSerialsRequest {
 }
 
@@ -26,15 +19,23 @@ message GetSerialsResponse {
   repeated uint32 serials = 1;
 }
 
+message GetVersionRequest {
+  uint32 serial = 1;
+}
+
+message GetVersionResponse {
+  Version version = 1;
+}
+
 service YubikeyService {
-  rpc GetVersions(GetVersionsRequest) returns (GetVersionsResponse) {
-    option (google.api.http) = {
-      get: "/v1/yubikey/versions"
-    };
-  }
   rpc GetSerials(GetSerialsRequest) returns (GetSerialsResponse) {
     option (google.api.http) = {
       get: "/v1/yubikey/serials"
+    };
+  }
+  rpc GetVersion(GetVersionRequest) returns (GetVersionResponse) {
+    option (google.api.http) = {
+      get: "/v1/yubikey/version/{serial}"
     };
   }
 }

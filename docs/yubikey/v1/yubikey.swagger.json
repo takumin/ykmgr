@@ -38,14 +38,14 @@
         ]
       }
     },
-    "/v1/yubikey/versions": {
+    "/v1/yubikey/version/{serial}": {
       "get": {
-        "operationId": "YubikeyService_GetVersions",
+        "operationId": "YubikeyService_GetVersion",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetVersionsResponse"
+              "$ref": "#/definitions/v1GetVersionResponse"
             }
           },
           "default": {
@@ -55,6 +55,15 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "serial",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
         "tags": [
           "YubikeyService"
         ]
@@ -101,14 +110,11 @@
         }
       }
     },
-    "v1GetVersionsResponse": {
+    "v1GetVersionResponse": {
       "type": "object",
       "properties": {
-        "versions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1Version"
-          }
+        "version": {
+          "$ref": "#/definitions/v1Version"
         }
       }
     },
