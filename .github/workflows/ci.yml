@@ -37,6 +37,7 @@ jobs:
       CC: 'gcc'
       CXX: 'g++'
       CGO_ENABLED: '1'
+      AQUA_VERSION: 'v1.4.0'
       RELEASE_GO_VERSION: '1.18'
     runs-on: ${{ matrix.os }}-latest
     name: Go ${{ matrix.go }} (${{ matrix.os }})
@@ -61,14 +62,14 @@ jobs:
     ################################################################################
     # Setup
     ################################################################################
-    - name: Setup Protoc
-      uses: arduino/setup-protoc@v1
-      with:
-        repo-token: ${{ github.token }}
     - name: Setup Go
       uses: actions/setup-go@v3
       with:
         go-version: ${{ matrix.go }}
+    - name: Setup Aqua
+      uses: aquaproj/aqua-installer@v1.0.0
+      with:
+        aqua_version: ${{ env.AQUA_VERSION }}
     ################################################################################
     # Cache
     ################################################################################
@@ -79,10 +80,16 @@ jobs:
         GOMODCACHE="$(go env GOMODCACHE)"
         test -z "${GOCACHE}" && GOCACHE="${HOME}/.cache/go-build"
         test -z "${GOMODCACHE}" && GOMODCACHE="$(go env GOPATH)/pkg/mod"
+        test -z "${AQUA_ROOT_DIR}" && AQUA_ROOT_DIR="${HOME}/.local/share/aquaproj-aqua"
         test -z "${BUF_CACHE_DIR}" && BUF_CACHE_DIR="${HOME}/.cache/buf"
         echo "::set-output name=go-build::${GOCACHE}"
         echo "::set-output name=go-mod::${GOMODCACHE}"
+        echo "::set-output name=aqua::${AQUA_ROOT_DIR}"
         echo "::set-output name=buf-mod::${BUF_CACHE_DIR}"
+        echo "GOCACHE=${GOCACHE}" >> $GITHUB_ENV
+        echo "GOMODCACHE=${GOMODCACHE}" >> $GITHUB_ENV
+        echo "AQUA_ROOT_DIR=${AQUA_ROOT_DIR}" >> $GITHUB_ENV
+        echo "BUF_CACHE_DIR=${BUF_CACHE_DIR}" >> $GITHUB_ENV
     - name: Go Build Cache
       uses: actions/cache@v3
       with:
@@ -93,6 +100,11 @@ jobs:
       with:
         path: ${{ steps.cache-dir.outputs.go-mod }}
         key: ${{ matrix.os }}-go-${{ matrix.go }}-mod-${{ hashFiles('**/go.sum') }}-${{ hashFiles('.github/actions-cache-version') }}
+    - name: Aqua Cache
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.cache-dir.outputs.aqua }}
+        key: ${{ matrix.os }}-buf-${{ matrix.go }}-mod-${{ hashFiles('**/aqua.yaml') }}-${{ hashFiles('.github/actions-cache-version') }}
     - name: Buf Mod Cache
       uses: actions/cache@v3
       with:
