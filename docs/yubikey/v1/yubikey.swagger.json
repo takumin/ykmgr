@@ -16,6 +16,37 @@
     "application/json"
   ],
   "paths": {
+    "/v1/yubikey/attestation/certificate/{serial}": {
+      "get": {
+        "operationId": "YubikeyService_GetAttestationCertificate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetAttestationCertificateResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "serial",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "YubikeyService"
+        ]
+      }
+    },
     "/v1/yubikey/retries/{serial}": {
       "get": {
         "operationId": "YubikeyService_GetRetries",
@@ -126,6 +157,15 @@
           "items": {
             "$ref": "#/definitions/protobufAny"
           }
+        }
+      }
+    },
+    "v1GetAttestationCertificateResponse": {
+      "type": "object",
+      "properties": {
+        "certificate": {
+          "type": "string",
+          "format": "byte"
         }
       }
     },

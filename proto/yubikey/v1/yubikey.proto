@@ -34,6 +34,14 @@ message GetRetriesResponse {
   uint32 retries = 1;
 }
 
+message GetAttestationCertificateRequest {
+  uint32 serial = 1;
+}
+
+message GetAttestationCertificateResponse {
+  bytes certificate = 1;
+}
+
 service YubikeyService {
   rpc GetSerials(GetSerialsRequest) returns (GetSerialsResponse) {
     option (google.api.http) = {
@@ -48,6 +56,11 @@ service YubikeyService {
   rpc GetRetries(GetRetriesRequest) returns (GetRetriesResponse) {
     option (google.api.http) = {
       get: "/v1/yubikey/retries/{serial}"
+    };
+  }
+  rpc GetAttestationCertificate(GetAttestationCertificateRequest) returns (GetAttestationCertificateResponse) {
+    option (google.api.http) = {
+      get: "/v1/yubikey/attestation/certificate/{serial}"
     };
   }
 }

@@ -82,3 +82,16 @@ func (s *server) GetRetries(ctx context.Context, req *yubikey.GetRetriesRequest)
 		Retries: uint32(retries),
 	}, nil
 }
+
+func (s *server) GetAttestationCertificate(ctx context.Context, req *yubikey.GetAttestationCertificateRequest) (*yubikey.GetAttestationCertificateResponse, error) {
+	if _, ok := s.yk[req.GetSerial()]; !ok {
+		return nil, fmt.Errorf("not found serial")
+	}
+	certificate, err := s.yk[req.GetSerial()].AttestationCertificate()
+	if err != nil {
+		return nil, err
+	}
+	return &yubikey.GetAttestationCertificateResponse{
+		Certificate: certificate.Raw,
+	}, nil
+}

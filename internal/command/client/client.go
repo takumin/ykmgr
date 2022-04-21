@@ -1,6 +1,7 @@
 package client
 
 import (
+	"crypto/x509"
 	"log"
 
 	"github.com/urfave/cli/v2"
@@ -88,10 +89,25 @@ func action(c *config.Config) func(ctx *cli.Context) error {
 				return err
 			}
 
-			log.Printf(
-				"Retries: %d\n",
-				retries.GetRetries(),
+			log.Println("Retries:", retries.GetRetries())
+
+			resCertificate, err := client.GetAttestationCertificate(
+				ctx.Context,
+				&yubikey.GetAttestationCertificateRequest{
+					Serial: serial,
+				},
 			)
+			if err != nil {
+				return err
+			}
+
+			certificate, err := x509.ParseCertificate(resCertificate.GetCertificate())
+			if err != nil {
+				return err
+			}
+
+			log.Println("Issuer:", certificate.Issuer)
+			log.Println("Subject:", certificate.Subject)
 		}
 
 		return nil
