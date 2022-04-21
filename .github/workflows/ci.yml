@@ -10,8 +10,8 @@ on:
     - 'go.sum'
     # Protocol Buffers
     - '**.proto'
-    - 'buf.yaml'
-    - 'buf.lock'
+    - '**/buf.yaml'
+    - '**/buf.lock'
     - 'buf.gen.yaml'
     - 'buf.work.yaml'
     # GitHub Actions
