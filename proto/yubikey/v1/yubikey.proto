@@ -12,8 +12,7 @@ message Version {
   uint32 patch = 3;
 }
 
-message GetSerialsRequest {
-}
+message GetSerialsRequest {}
 
 message GetSerialsResponse {
   repeated uint32 serials = 1;

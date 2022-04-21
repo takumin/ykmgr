@@ -4,6 +4,8 @@ BasedOnStyle: Google
 ColumnLimit: 120
 AlignConsecutiveAssignments: true
 AlignConsecutiveDeclarations: true
-AllowShortFunctionsOnASingleLine: None
-AllowShortIfStatementsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: Empty
 AllowShortLoopsOnASingleLine: false
