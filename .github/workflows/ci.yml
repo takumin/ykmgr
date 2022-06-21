@@ -4,6 +4,7 @@ on:
     paths:
     # Build
     - 'Makefile'
+    - 'aqua.yaml'
     # Go
     - '**.go'
     - 'go.mod'
