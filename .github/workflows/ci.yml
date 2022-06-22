@@ -101,16 +101,16 @@ jobs:
       with:
         path: ${{ steps.cache-dir.outputs.go-mod }}
         key: ${{ matrix.os }}-go-${{ matrix.go }}-mod-${{ hashFiles('**/go.sum') }}-${{ hashFiles('.github/actions-cache-version') }}
-    - name: Aqua Cache
-      uses: actions/cache@v3
-      with:
-        path: ${{ steps.cache-dir.outputs.aqua }}
-        key: ${{ matrix.os }}-buf-${{ matrix.go }}-mod-${{ hashFiles('**/aqua.yaml') }}-${{ hashFiles('.github/actions-cache-version') }}
     - name: Buf Mod Cache
       uses: actions/cache@v3
       with:
         path: ${{ steps.cache-dir.outputs.buf-mod }}
         key: ${{ matrix.os }}-buf-${{ matrix.go }}-mod-${{ hashFiles('**/buf.lock') }}-${{ hashFiles('.github/actions-cache-version') }}
+    - name: Aqua Tools Cache
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.cache-dir.outputs.aqua }}
+        key: ${{ matrix.os }}-aqua-tools-${{ hashFiles('**/aqua.yaml') }}-${{ hashFiles('.github/actions-cache-version') }}
     ################################################################################
     # Go
     ################################################################################
