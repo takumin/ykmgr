@@ -1,6 +1,6 @@
 module github.com/takumin/ykmgr
 
-go 1.17
+go 1.19
 
 require (
 	github.com/go-piv/piv-go v1.9.0
