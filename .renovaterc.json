@@ -2,9 +2,9 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base",
-    ":timezone(Asia/Tokyo)",
     "github>aquaproj/aqua-renovate-config#1.2.5"
   ],
+  "timezone": "Asia/Tokyo",
   "dependencyDashboard": true,
   "postUpdateOptions": [
     "gomodUpdateImportPaths",
@@ -18,6 +18,7 @@
       "enabled": false
     },
     {
+      "description": "Opt-in various minor, patch, pin, digest version updates",
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true,
       "platformAutomerge": true
