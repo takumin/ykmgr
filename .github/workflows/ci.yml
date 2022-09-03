@@ -30,8 +30,7 @@ jobs:
         os:
         - ubuntu
         - macos
-        # TODO: Once Aqua is Windows-compatible, activate it.
-        # - windows
+        - windows
         go:
         - '1.17'
         - '1.18'
