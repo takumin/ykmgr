@@ -7,7 +7,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.11.3
 	github.com/urfave/cli/v2 v2.16.3
 	golang.org/x/net v0.0.0-20220920183852-bf014ff85ad5
-	google.golang.org/genproto v0.0.0-20220919141832-68c03719ef51
+	google.golang.org/genproto v0.0.0-20220920164045-a2a065f3c118
 	google.golang.org/grpc v1.49.0
 	google.golang.org/protobuf v1.28.1
 )
