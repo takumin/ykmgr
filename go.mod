@@ -6,7 +6,7 @@ require (
 	github.com/go-piv/piv-go v1.10.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.11.3
 	github.com/urfave/cli/v2 v2.16.3
-	golang.org/x/net v0.0.0-20220926192436-02166a98028e
+	golang.org/x/net v0.0.0-20220927171203-f486391704dc
 	google.golang.org/genproto v0.0.0-20220926220553-6981cbe3cfce
 	google.golang.org/grpc v1.49.0
 	google.golang.org/protobuf v1.28.1
