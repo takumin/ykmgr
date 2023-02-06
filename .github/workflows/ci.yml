@@ -71,7 +71,7 @@ jobs:
     - name: Setup Aqua
       uses: aquaproj/aqua-installer@v1.2.0
       with:
-        aqua_version: v1.32.3 # renovate: depName=aquaproj/aqua
+        aqua_version: v1.33.0 # renovate: depName=aquaproj/aqua
     ################################################################################
     # Cache
     ################################################################################
