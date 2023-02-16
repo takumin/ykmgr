@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/go-piv/piv-go v1.10.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.0
-	github.com/urfave/cli/v2 v2.24.3
+	github.com/urfave/cli/v2 v2.24.4
 	golang.org/x/net v0.7.0
 	google.golang.org/genproto v0.0.0-20230209215440-0dfe4f8abfcc
 	google.golang.org/grpc v1.53.0
