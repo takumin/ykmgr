@@ -6,7 +6,7 @@ registries:
   ref: v3.125.0 # renovate: depName=aquaproj/aqua-registry
 
 packages:
-- name: bufbuild/buf@v1.15.0
+- name: bufbuild/buf@v1.15.1
 - name: protocolbuffers/protobuf-go/protoc-gen-go@v1.29.0
 - name: grpc/grpc-go/protoc-gen-go-grpc@cmd/protoc-gen-go-grpc/v1.3.0
 - name: grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway@v2.15.2
