@@ -33,9 +33,9 @@ jobs:
         # TODO: Once Aqua is Windows-compatible, activate it.
         # - windows
         go:
-        - '1.17'
         - '1.18'
         - '1.19'
+        - '1.20'
     env:
       CC: 'gcc'
       CXX: 'g++'
