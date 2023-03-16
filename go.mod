@@ -3,7 +3,7 @@ module github.com/takumin/ykmgr
 go 1.18
 
 require (
-	github.com/go-piv/piv-go v1.10.0
+	github.com/go-piv/piv-go v1.11.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.2
 	github.com/urfave/cli/v2 v2.25.0
 	golang.org/x/net v0.8.0
