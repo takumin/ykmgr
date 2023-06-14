@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/go-piv/piv-go v1.11.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.16.0
-	github.com/urfave/cli/v2 v2.25.5
+	github.com/urfave/cli/v2 v2.25.6
 	golang.org/x/net v0.10.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20230530153820-e85fd2cbaebc
 	google.golang.org/grpc v1.55.0
