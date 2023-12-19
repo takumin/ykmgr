@@ -9,6 +9,6 @@ RUN cat tools/tools.go | grep _ | awk -F'"' '{print $2}' | xargs -tI % go instal
 COPY . .
 RUN make archive OS=linux-musl
 
-FROM alpine:3.18 AS distribution
+FROM alpine:3.19 AS distribution
 RUN apk --no-cache --update add pcsc-lite-libs
 COPY --from=builder /src/github.com/takumin/ykmgr/dist /opt/ykmgr-musl
