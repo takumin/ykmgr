@@ -93,22 +93,22 @@ jobs:
         echo "AQUA_ROOT_DIR=${AQUA_ROOT_DIR}" >> $GITHUB_ENV
         echo "BUF_CACHE_DIR=${BUF_CACHE_DIR}" >> $GITHUB_ENV
     - name: Go Build Cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ steps.cache-dir.outputs.go-build }}
         key: ${{ matrix.os }}-go-${{ matrix.go }}-build-${{ hashFiles('**/go.sum') }}-${{ hashFiles('.github/actions-cache-version') }}
     - name: Go Mod Cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ steps.cache-dir.outputs.go-mod }}
         key: ${{ matrix.os }}-go-${{ matrix.go }}-mod-${{ hashFiles('**/go.sum') }}-${{ hashFiles('.github/actions-cache-version') }}
     - name: Buf Mod Cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ steps.cache-dir.outputs.buf-mod }}
         key: ${{ matrix.os }}-buf-${{ matrix.go }}-mod-${{ hashFiles('**/buf.lock') }}-${{ hashFiles('.github/actions-cache-version') }}
     - name: Aqua Tools Cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ steps.cache-dir.outputs.aqua }}
         key: ${{ matrix.os }}-aqua-tools-${{ hashFiles('**/aqua.yaml') }}-${{ hashFiles('.github/actions-cache-version') }}
